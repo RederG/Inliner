@@ -14,20 +14,20 @@ After you opened a terminal, call the name of the tool : `inline`.
 
 Then specify one of the parameters :
 ```
--source <file_path>
+-src <file_path>
 ```
 
 or 
 
 ```
--result <file_path>
+-out <file_path>
 ```
 
 After that, change "file_path" to the path of the file you want to inline/store the result.
 
 At last, you should have the following command (as an example) :
 ```
-inline -source file.html -result result.html
+inline -src file.html -out result.html
 ```
 
 By default, the number of tab's spaces is 4.
@@ -41,7 +41,17 @@ Here, the "spaces_number" will be a number that indicates the number of spaces a
 
 In the end, you should have (for example) : 
 ```
-inline -source file.css -result result.css -tab-spaces 4
+inline -src file.css -out result.css -tab-spaces 4
+```
+
+If you need more helps, you can specify the parameter : 
+```
+-help
+```
+
+So, you can have this :
+```
+inline -help
 ```
 
 ## Utility
