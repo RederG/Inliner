@@ -49,7 +49,7 @@ int main(int args_counter, char** args) {
         }
 
         if(!result_file_exists)
-            std::cout << "[Warning] : No result file was specified, it will be stored in 'result.txt'\n" << std::endl;
+            std::cout << "[Warning] : No result file was specified, it will be stored in 'result.txt'" << std::endl;
 
         inliner.inline_file();
         inliner.store_result();

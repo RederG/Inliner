@@ -24,7 +24,7 @@ void Inliner::inline_file() {
     std::vector<unsigned int> positions_to_remove;
     auto init_time = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Inlining '" << this->file_path << "' in progress..." << std::endl;
+    std::cout << "\nInlining '" << this->file_path << "' in progress..." << std::endl;
 
     file.open(this->file_path, std::ios_base::in);
 
@@ -80,5 +80,5 @@ void Inliner::store_result() const {
 
     file.close();
 
-    std::cout << "The inlined file is stored on '" << this->result_file << "'" << std::endl;
+    std::cout << "The inlined file is stored on '" << this->result_file << "'\n" << std::endl;
 }
