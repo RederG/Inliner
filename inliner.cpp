@@ -18,7 +18,7 @@ bool Inliner::verify_source() const {
 void Inliner::inline_file() {
     std::fstream file;
     std::string content;
-    unsigned int i, space_number, space_removed;
+    unsigned int i, j, space_number, space_removed;
     char letter;
     unsigned int spaces_positions[this->tab_spaces];
     std::vector<unsigned int> positions_to_remove;
@@ -42,8 +42,9 @@ void Inliner::inline_file() {
         if(content[i] == ' ') {
             spaces_positions[space_number] = i;
             space_number++;
-            if(space_number == this->tab_spaces) { 
-                positions_to_remove.push_back(spaces_positions[0]);
+            if(space_number == this->tab_spaces) {
+                for(j = 0; j < this->tab_spaces; j++)
+                    positions_to_remove.push_back(spaces_positions[j]);
                 space_number = 0;
             }
         } else {
@@ -54,10 +55,8 @@ void Inliner::inline_file() {
     // Removing all tabulations (made with spaces)
     space_removed = 0;
     for(unsigned int position : positions_to_remove) {
-        for(i = 0; i < this->tab_spaces; i++) {
-            content.erase(content.begin() + position + i - space_removed);
-            space_removed++;
-        }
+        content.erase(content.begin() + position - space_removed);
+        space_removed++;
     }
     content.erase(content.end() - 1);
     this->file_inlined = content;
