@@ -62,4 +62,15 @@ It is also usefull when we want to spare some time when loading pages, or spare 
 
 Other usages can be listed but I only found these for now.
 
+## Building the project
+
+If you want to build the project, you must have the g++ compiler installed on your machine.
+
+After that, go to the folder containing the source files (all ".cpp" and ".hpp" files).
+
+Then, execute the following command :
+```
+g++ *.cpp -o inline
+```
+
 ## So, enjoy the tool !!!
