@@ -10,6 +10,7 @@ int main(int args_counter, char** args) {
     std::vector<std::string> arguments;
     bool demand_help = false;
     bool result_file_exists = false;
+    bool source_file_exists = false;
 
     for(i = 0; i < args_counter; i++) {
         arguments.push_back(args[i]);
@@ -19,6 +20,7 @@ int main(int args_counter, char** args) {
         if(arguments[i] == "-src" || arguments[i] == "--src" || arguments[i] == "-s" || arguments[i] == "--s") {
             i++;
             source_file = arguments[i];
+            source_file_exists = true;
         } else if(arguments[i] == "-out" || arguments[i] == "--out" || arguments[i] == "-o" || arguments[i] == "--o") {
             i++;
             result_file = arguments[i];
@@ -38,6 +40,11 @@ int main(int args_counter, char** args) {
             std::cerr << "[Error] : The specified argument : '" << arguments[i] << "' is unknown";
             return EXIT_FAILURE;
         }
+    }
+
+    if(!source_file_exists){
+        std::cerr << "[Error] : No source files was given";
+        return EXIT_FAILURE;
     }
 
     if(!demand_help) {
