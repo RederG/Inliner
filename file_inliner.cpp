@@ -12,11 +12,20 @@ bool is_file_exists(const char* file) {
 }
 
 bool FileInliner::verify_source(std::string* error) const {
+    std::fstream file;
+
+    file.open(this->file_path, std::ios_base::in);
+
     if(!is_file_exists(this->file_path.c_str())) {
+        error->clear();
+        error->append("[Error] => The specified file : '" + this->file_path + "' doesn't exist");
+        return false;
+    } else if(!file.is_open()) {
         error->clear();
         error->append("[Error] => The specified file : '" + this->file_path + "' can not be opened");
         return false;
     }
+    file.close();
     return true;
 }
 
@@ -80,12 +89,14 @@ void FileInliner::store_result() const {
     unsigned int i;
 
     file.open(this->result_file, std::ios_base::out);
+    
+    if(file.is_open()) {
+        for(i = 0; i < this->file_inlined.size(); i++) {
+            file.write(&this->file_inlined[i], 1);
+        }
 
-    for(i = 0; i < this->file_inlined.size(); i++) {
-        file.write(&this->file_inlined[i], 1);
+        file.close();
     }
-
-    file.close();
 
     std::cout << "The inlined file is stored on '" << this->result_file << "'\n" << std::endl;
 }
