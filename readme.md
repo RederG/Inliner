@@ -59,8 +59,7 @@ At last, if you want to inline multiple files, you can add the option :
 -list
 ```
 
-(Warning) : If you activate the 'list' mode, the -src option should take a file that contains all files to inline
-            And the -out option should take a folder where the inlined files will be stored
+(Warning) : If you activate the 'list' mode, the -src option should take a file that contains all files to inline and the -out option should take a folder where the inlined files will be stored
 
 ## Utility
 
