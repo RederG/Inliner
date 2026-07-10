@@ -29,11 +29,13 @@ void Inliner::inline_file() {
     file.open(this->file_path, std::ios_base::in);
 
     // Getting the content of the file and ignoring all '\n' and '\t' characters
-    while(!file.eof()) {
-        file.read(&letter, 1);
+    do {
+        file.read(&letter, sizeof(char));
+        if(file.eof())
+            break;
         if(letter != '\n' && letter != '\t')
             content.push_back(letter);
-    }
+    } while(!file.eof());
 
     // Shearching for tabulations (made with spaces)
     space_number = 0;
@@ -58,7 +60,7 @@ void Inliner::inline_file() {
         content.erase(content.begin() + position - space_removed);
         space_removed++;
     }
-    content.erase(content.end() - 1);
+    
     this->file_inlined = content;
 
     file.close();
