@@ -4,18 +4,32 @@
 #include <iostream>
 #include "inliner.hpp"
 
-Inliner::Inliner(std::string source_file_path, std::string result_file_path, unsigned int tab_spaces)
+FileInliner::FileInliner(std::string source_file_path, std::string result_file_path, unsigned int tab_spaces)
 : file_path(source_file_path), result_file(result_file_path), tab_spaces(tab_spaces) {}
 
 bool is_file_exists(const char* file) {
     return std::filesystem::exists(file);
 }
 
-bool Inliner::verify_source() const {
-    return is_file_exists(this->file_path.c_str());
+bool FileInliner::verify_source(std::string* error) const {
+    std::fstream file;
+
+    file.open(this->file_path, std::ios_base::in);
+
+    if(!is_file_exists(this->file_path.c_str())) {
+        error->clear();
+        error->append("[Error] => The specified file : '" + this->file_path + "' doesn't exist");
+        return false;
+    } else if(!file.is_open()) {
+        error->clear();
+        error->append("[Error] => The specified file : '" + this->file_path + "' can not be opened");
+        return false;
+    }
+    file.close();
+    return true;
 }
 
-void Inliner::inline_file() {
+void FileInliner::inline_file() {
     std::fstream file;
     std::string content;
     unsigned int i, j, space_number, space_removed;
@@ -70,17 +84,19 @@ void Inliner::inline_file() {
     std::cout << "Inlining terminated in " << duration << "seconds" << std::endl;
 }
 
-void Inliner::store_result() const {
+void FileInliner::store_result() const {
     std::fstream file;
     unsigned int i;
 
     file.open(this->result_file, std::ios_base::out);
+    
+    if(file.is_open()) {
+        for(i = 0; i < this->file_inlined.size(); i++) {
+            file.write(&this->file_inlined[i], 1);
+        }
 
-    for(i = 0; i < this->file_inlined.size(); i++) {
-        file.write(&this->file_inlined[i], 1);
+        file.close();
     }
-
-    file.close();
 
     std::cout << "The inlined file is stored on '" << this->result_file << "'\n" << std::endl;
 }

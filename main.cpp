@@ -7,10 +7,13 @@ int main(int args_counter, char** args) {
     int i, tab_spaces = 4;
     std::string source_file;
     std::string result_file = "result.txt";
+    std::string result_folder = "inlined_files";
+    std::string error;
     std::vector<std::string> arguments;
     bool demand_help = false;
     bool result_file_exists = false;
     bool source_file_exists = false;
+    bool inline_list = false;
 
     for(i = 0; i < args_counter; i++) {
         arguments.push_back(args[i]);
@@ -24,6 +27,7 @@ int main(int args_counter, char** args) {
         } else if(arguments[i] == "-out" || arguments[i] == "--out" || arguments[i] == "-o" || arguments[i] == "--o") {
             i++;
             result_file = arguments[i];
+            result_folder = arguments[i];
             result_file_exists = true;
         } else if(arguments[i] == "-tab-spaces" || arguments[i] == "--tab-spaces" || arguments[i] == "-t" || arguments[i] == "--t") {
             i++;
@@ -36,6 +40,8 @@ int main(int args_counter, char** args) {
             }
         } else if(arguments[i] == "-help" || arguments[i] == "--help" || arguments[i] == "-h" || arguments[i] == "--h") {
             demand_help = true;
+        } else if(arguments[i] == "-list" || arguments[i] == "--list" || arguments[i] == "-l" || arguments[i] == "--l") {
+            inline_list = true;
         } else {
             std::cerr << "[Error] : The specified argument : '" << arguments[i] << "' is unknown";
             return EXIT_FAILURE;
@@ -48,18 +54,34 @@ int main(int args_counter, char** args) {
     }
 
     if(!demand_help) {
-        Inliner inliner(source_file, result_file, tab_spaces);
+        if(!inline_list) {
+            FileInliner inliner(source_file, result_file, tab_spaces);
 
-        if(!inliner.verify_source()) {
-            std::cerr << "[Error] : The specified file : '" << source_file << "' cannot be opened";
-            return EXIT_FAILURE;
+            if(!inliner.verify_source(&error)) {
+                std::cerr << error;
+                return EXIT_FAILURE;
+            }
+
+            if(!result_file_exists)
+                std::cout << "[Warning] : No result file was specified, it will be stored in 'inlined_files' foler" << std::endl;
+
+            inliner.inline_file();
+            inliner.store_result();
+        } else {
+            FileListInliner list_inliner(source_file, result_folder, tab_spaces);
+
+            if(!list_inliner.verify_sources(&error)) {
+                std::cerr << error;
+                return EXIT_FAILURE;
+            }
+
+            if(!result_file_exists)
+                std::cout << "[Warning] : No result file was specified, the files will be stored in 'inlined_files' folder" << std::endl;
+            
+            list_inliner.inline_files();
+            list_inliner.store_results();
+            list_inliner.clear();
         }
-
-        if(!result_file_exists)
-            std::cout << "[Warning] : No result file was specified, it will be stored in 'result.txt'" << std::endl;
-
-        inliner.inline_file();
-        inliner.store_result();
     } else {
         std::cout << std::endl;
 
