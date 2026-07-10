@@ -47,13 +47,12 @@ int main(int args_counter, char** args) {
             return EXIT_FAILURE;
         }
     }
-
-    if(!source_file_exists){
-        std::cerr << "[Error] : No source files was given";
-        return EXIT_FAILURE;
-    }
-
+    
     if(!demand_help) {
+        if(!source_file_exists){
+            std::cerr << "[Error] : No source files was given";
+            return EXIT_FAILURE;
+        }
         if(!inline_list) {
             FileInliner inliner(source_file, result_file, tab_spaces);
 
@@ -85,7 +84,7 @@ int main(int args_counter, char** args) {
     } else {
         std::cout << std::endl;
 
-        std::cout << "Inline program's help" << std::endl;
+        std::cout << "Inliner program's help" << std::endl;
         std::cout << std::endl;
 
         std::cout << "Command pattern : " << std::endl;
@@ -97,13 +96,19 @@ int main(int args_counter, char** args) {
         std::cout << "\t -src, --src, -s, --s               : specifies the source file" << std::endl;
         std::cout << "\t -out, --out, -o, --o               : specifies the result file" << std::endl;
         std::cout << "\t -tab-spaces, --tab-spaces, -t, --t : specifies the spaces number of the tabulation" << std::endl;
+        std::cout << "\t -list, --list, -l, --l             : allow to the inliner to inline multiple files" << std::endl;
         std::cout << std::endl;
 
-        std::cout << "The <value> can be : a file path, a number or nothing (depending on the specified <option>)" << std::endl;
+        std::cout << "The <value> can be : a file/folder path, a number or nothing (depending on the specified <option>)" << std::endl;
         std::cout << "Can input multiple <option> and <value> like this (for example) :" << std::endl;
         std::cout << "\t inline -src file.txt -out result.txt -t 2" << std::endl;
         std::cout << std::endl;
         std::cout << "If you input one of the help option, this section will be printed and no more action will be executed" << std::endl;
+        std::cout << std::endl;
+        std::cout << "If you input one of the list option, the source path must be a file that contains all files to inline" << std::endl;
+        std::cout << "And the result path must be a folder where we want to store the results" << std::endl;
+        std::cout << "For example :" << std::endl;
+        std::cout << "\t inline -list -src files_to_inline_list.txt -out list" << std::endl;
         std::cout << std::endl;
     }
 
