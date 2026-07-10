@@ -54,6 +54,14 @@ So, you can have this :
 inline -help
 ```
 
+At last, if you want to inline multiple files, you can add the option :
+```
+-list
+```
+
+(Warning) : If you activate the 'list' mode, the -src option should take a file that contains all files to inline
+            And the -out option should take a folder where the inlined files will be stored
+
 ## Utility
 
 It can be used to inline all web files (HTML, CSS, JavaScript, etc) for the micro-controllers. It is usefull not to remove all tabulations or inline when copy/paste the code from one editor to one another.
