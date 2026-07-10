@@ -65,7 +65,10 @@ int main(int args_counter, char** args) {
                 std::cout << "[Warning] : No result file was specified, it will be stored in 'inlined_files' foler" << std::endl;
 
             inliner.inline_file();
-            inliner.store_result();
+            if(!inliner.store_result(&error)) {
+                std::cerr << error;
+                return EXIT_FAILURE;
+            }
         } else {
             FileListInliner list_inliner(source_file, result_folder, tab_spaces);
 
@@ -78,7 +81,10 @@ int main(int args_counter, char** args) {
                 std::cout << "[Warning] : No result file was specified, the files will be stored in 'inlined_files' folder" << std::endl;
             
             list_inliner.inline_files();
-            list_inliner.store_results();
+            if(!list_inliner.store_results(&error)) {
+                std::cerr << error;
+                return EXIT_FAILURE;
+            }
             list_inliner.clear();
         }
     } else {

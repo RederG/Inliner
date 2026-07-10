@@ -84,7 +84,7 @@ void FileInliner::inline_file() {
     std::cout << "Inlining terminated in " << duration << "seconds" << std::endl;
 }
 
-void FileInliner::store_result() const {
+bool FileInliner::store_result(std::string* error) const {
     std::fstream file;
     unsigned int i;
 
@@ -96,7 +96,13 @@ void FileInliner::store_result() const {
         }
 
         file.close();
+    } else {
+        error->clear();
+        error->append("[Error] => Cannot create/open the result file : '" + this->result_file + "'\n");
+        error->append("           Maybe you should create a folder or something ?");
+        return false;
     }
 
     std::cout << "The inlined file is stored on '" << this->result_file << "'\n" << std::endl;
+    return true;
 }

@@ -38,7 +38,7 @@ bool FileListInliner::verify_sources(std::string* error) {
                 file_directory = "";
                 reversed_file_directory = "";
                 is_directory = false;
-                
+
                 for(i = file_name.size() - 1; i >= 0; i--) {
                     if(file_name[i] == '/')
                         is_directory = true;
@@ -95,11 +95,13 @@ void FileListInliner::inline_files() const {
     std::cout << "Files inlined in " << duration <<  "seconds\n" << std::endl;
 }
 
-void FileListInliner::store_results() const {
+bool FileListInliner::store_results(std::string* error) const {
     this->create_folder();
     for(FileInliner* inliner : this->inlined_files) {
-        inliner->store_result();
+        if(!inliner->store_result(error))
+            return false;
     }
+    return true;
 }
 
 void FileListInliner::clear() {
