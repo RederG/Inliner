@@ -30,6 +30,8 @@ At last, you should have the following command (as an example) :
 inline -src file.html -out result.html
 ```
 
+(Warning) : The result file should not take a file that is inside the current folder containing the file to be inlined (unless the folder has been created before)
+
 By default, the number of tab's spaces is 4.
 
 You can specify the number of spaces of the tabulations by adding the parameter : 
