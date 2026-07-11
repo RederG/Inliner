@@ -12,10 +12,7 @@ bool FileListInliner::verify_sources(std::string* error) {
     std::fstream file;
     std::string file_directory;
     std::string reversed_file_directory;
-    bool is_directory = false;
     char letter;
-    int i;
-    unsigned int j;
     std::string line;
     std::vector<std::string> all_files_name;
 
@@ -33,26 +30,6 @@ bool FileListInliner::verify_sources(std::string* error) {
                     line = "";
                 }
             } while(!file.eof());
-
-            for(std::string file_name : all_files_name) {
-                file_directory = "";
-                reversed_file_directory = "";
-                is_directory = false;
-
-                for(i = file_name.size() - 1; i >= 0; i--) {
-                    if(file_name[i] == '/')
-                        is_directory = true;
-                    if(is_directory) {
-                        file_directory.push_back(file_name[i]);
-                    }
-                }
-                if(!file_directory.empty())
-                    reversed_file_directory.resize(file_directory.size());
-                for(j = 0; j < file_directory.size(); j++) 
-                    reversed_file_directory[j] = file_directory[file_directory.size() - j - 1];
-                if(!file_directory.empty())
-                    this->files_folder.push_back(reversed_file_directory);
-            }
 
             for(std::string file_name : all_files_name) {
                 FileInliner* inliner = new FileInliner(file_name, this->result_folder_path + "/" + file_name, this->tab_spaces);
@@ -73,14 +50,6 @@ bool FileListInliner::verify_sources(std::string* error) {
     }
 }
 
-void FileListInliner::create_folder() const {
-    if(!std::filesystem::exists(this->result_folder_path)) {
-        std::filesystem::create_directory(this->result_folder_path);
-        for(std::string folder : this->files_folder)
-            std::filesystem::create_directory(this->result_folder_path + "/" + folder);
-    }
-}
-
 void FileListInliner::inline_files() const {
     auto init_time = std::chrono::high_resolution_clock::now();
 
@@ -96,7 +65,6 @@ void FileListInliner::inline_files() const {
 }
 
 bool FileListInliner::store_results(std::string* error) const {
-    this->create_folder();
     for(FileInliner* inliner : this->inlined_files) {
         if(!inliner->store_result(error))
             return false;

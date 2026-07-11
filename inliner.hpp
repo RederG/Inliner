@@ -7,13 +7,14 @@
     class FileInliner {
         public:
             FileInliner(std::string source_file_path, std::string result_file_path, unsigned int tab_spaces);
-            bool verify_source(std::string* error) const;
+            bool verify_source(std::string* error);
             void inline_file();
             bool store_result(std::string* error) const;
         private:
-            std::string file_path, result_file;
+            std::string file_path, result_file, result_folder;
             std::string file_inlined;
             unsigned int tab_spaces;
+            void create_folders() const;
     };
 
     class FileListInliner {
@@ -27,8 +28,6 @@
             std::string file_list_path, result_folder_path;
             unsigned int tab_spaces;
             std::vector<FileInliner*> inlined_files;
-            std::vector<std::string> files_folder;
-            void create_folder() const;
     };
 
 #endif

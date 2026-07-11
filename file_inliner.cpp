@@ -5,14 +5,20 @@
 #include "inliner.hpp"
 
 FileInliner::FileInliner(std::string source_file_path, std::string result_file_path, unsigned int tab_spaces)
-: file_path(source_file_path), result_file(result_file_path), tab_spaces(tab_spaces) {}
+: file_path(source_file_path), result_file(result_file_path), tab_spaces(tab_spaces) {
+    this->result_folder.clear();
+}
 
 bool is_file_exists(const char* file) {
     return std::filesystem::exists(file);
 }
 
-bool FileInliner::verify_source(std::string* error) const {
+bool FileInliner::verify_source(std::string* error) {
     std::fstream file;
+    std::string folders_path;
+    int i;
+    unsigned int j;
+    bool is_folder = false;
 
     file.open(this->file_path, std::ios_base::in);
 
@@ -24,8 +30,20 @@ bool FileInliner::verify_source(std::string* error) const {
         error->clear();
         error->append("[Error] => The specified file : '" + this->file_path + "' can not be opened");
         return false;
+    } else {
+        for(i = this->result_file.size() - 1; i >= 0; i--) {
+            if(this->result_file[i] == '/')
+                is_folder = true;
+            if(is_folder)
+                folders_path.push_back(this->result_file[i]);
+        }
+        if(folders_path.size() > 0) {
+            this->result_folder.resize(folders_path.size());
+            for(j = 0; j < folders_path.size(); j++)
+                this->result_folder[j] = folders_path[folders_path.size() - 1 - j];
+        }
+        file.close();
     }
-    file.close();
     return true;
 }
 
@@ -84,10 +102,17 @@ void FileInliner::inline_file() {
     std::cout << "Inlining terminated in " << duration << "seconds" << std::endl;
 }
 
+void FileInliner::create_folders() const {
+    if(this->result_folder.size() > 0 && !std::filesystem::exists(this->result_folder)) {
+        std::filesystem::create_directories(this->result_folder);
+    }
+}
+
 bool FileInliner::store_result(std::string* error) const {
     std::fstream file;
     unsigned int i;
 
+    this->create_folders();
     file.open(this->result_file, std::ios_base::out);
     
     if(file.is_open()) {
